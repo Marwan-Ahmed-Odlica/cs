@@ -1,0 +1,155 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Call Analysis Output",
+  "type": "object",
+  "properties": {
+    "callSegmentation": {
+      "type": "object",
+      "properties": {
+        "speakerDetection": {
+          "type": "object",
+          "properties": {
+            "totalSpeakers": {
+              "type": "integer",
+              "description": "Total number of distinct speakers"
+            },
+            "roles": {
+              "type": "array",
+              "description": "Describes each speaker's role",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "speaker": {
+                    "type": "string",
+                    "description": "Speaker identifier (e.g., Agent, Customer)"
+                  },
+                  "description": {
+                    "type": "string",
+                    "description": "Description of the speaker's role"
+                  }
+                },
+                "required": ["speaker", "description"]
+              }
+            },
+            "speakerRoles": {
+              "type": "object",
+              "description": "Maps speaker identifiers to roles",
+              "patternProperties": {
+                "^Speaker \\d+$": {
+                  "type": "string",
+                  "description": "Role assigned to the speaker (e.g., Agent, Customer)"
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "required": ["totalSpeakers", "roles", "speakerRoles"]
+        }
+      },
+      "required": ["speakerDetection"]
+    },
+    "sentimentAndEmotionAnalysis": {
+      "type": "object",
+      "properties": {
+        "customerSentiment": {
+          "type": "array",
+          "description": "Sentiment observations for the customer",
+          "items": {
+            "type": "object",
+            "properties": {
+              "turn": {
+                "type": "integer",
+                "description": "Turn number of the sentiment observation"
+              },
+              "sentiment": {
+                "type": "string",
+                "description": "Sentiment type (e.g., neutral, frustrated, satisfied)"
+              },
+              "evidence": {
+                "type": "string",
+                "description": "Evidence for the sentiment in raw text"
+              }
+            },
+            "required": ["turn", "sentiment", "evidence"]
+          }
+        },
+        "agentTone": {
+          "type": "array",
+          "description": "Tone observations for the agent",
+          "items": {
+            "type": "object",
+            "properties": {
+              "turn": {
+                "type": "integer",
+                "description": "Turn number of the tone observation"
+              },
+              "tone": {
+                "type": "string",
+                "description": "Tone type (e.g., empathetic, polite)"
+              },
+              "evidence": {
+                "type": "string",
+                "description": "Evidence for the tone in raw text"
+              }
+            },
+            "required": ["turn", "tone", "evidence"]
+          }
+        }
+      },
+      "required": ["customerSentiment", "agentTone"]
+    },
+    "scriptAdherence": {
+      "type": "object",
+      "properties": {
+        "greetings": {
+          "type": "object",
+          "properties": {
+            "present": {
+              "type": "boolean",
+              "description": "Whether the greeting was present"
+            },
+            "evidence": {
+              "type": "string",
+              "description": "Evidence for the greeting in raw text"
+            }
+          },
+          "required": ["present", "evidence"]
+        },
+        "farewell": {
+          "type": "object",
+          "properties": {
+            "present": {
+              "type": "boolean",
+              "description": "Whether the farewell was present"
+            },
+            "evidence": {
+              "type": "string",
+              "description": "Evidence for the farewell in raw text"
+            }
+          },
+          "required": ["present", "evidence"]
+        },
+        "upsellOpportunity": {
+          "type": "object",
+          "properties": {
+            "present": {
+              "type": "boolean",
+              "description": "Whether upsell opportunities were present"
+            }
+          },
+          "required": ["present"]
+        },
+        "complianceScore": {
+          "type": "integer",
+          "description": "Compliance score (scale of 1-10)"
+        },
+        "scoreCause": {
+          "type": "string",
+          "description": "Explanation of the compliance score in raw text"
+        }
+      },
+      "required": ["greetings", "farewell", "upsellOpportunity", "complianceScore", "scoreCause"]
+    }
+  },
+  "required": ["callSegmentation", "sentimentAndEmotionAnalysis", "scriptAdherence"]
+}
